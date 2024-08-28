@@ -194,6 +194,7 @@ func longestCommonPrefix(strs []string) string {
 	return revPrefix
 }
 
+// 20. Valid Parentheses
 // Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
 //
 // An input string is valid if:
@@ -202,5 +203,104 @@ func longestCommonPrefix(strs []string) string {
 // Open brackets must be closed in the correct order.
 // Every close bracket has a corresponding open bracket of the same type.
 func isValid(s string) bool {
-	return false
+	arr := []rune(s)
+	parentheses := make([]int32, 0)
+	parenthesesMap := map[int32]int32{
+		40:  41,
+		91:  93,
+		123: 125,
+	}
+	valid := true
+	for _, ch := range arr {
+		switch ch {
+		case 40, 91, 123:
+			parentheses = append(parentheses, ch)
+		case 41, 93, 125:
+			lenPers := len(parentheses)
+			valid = lenPers != 0
+			if valid {
+				lastP := parentheses[lenPers-1]
+				parentheses = parentheses[0 : lenPers-1]
+				valid = parenthesesMap[lastP] == ch
+			}
+		}
+		if !valid {
+			break
+		}
+	}
+	return valid && len(parentheses) == 0
+}
+
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+/*
+21. Merge Two Sorted Lists
+You are given the heads of two sorted linked lists list1 and list2.
+Merge the two lists into one sorted list. The list should be made by splicing together the nodes of the first two lists.
+Return the head of the merged linked list.
+*/
+func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
+	// 1 2 4
+	// 1 3 4
+	// 1 1 2 4 4
+	if list1 == nil {
+		return list2
+	}
+	if list2 == nil {
+		return list1
+	}
+	var listNewNext1 *ListNode
+	var listNew *ListNode
+	for list1 != nil || list2 != nil {
+		if list1 != nil && list2 == nil {
+			if listNewNext1 == nil {
+				listNewNext1 = &ListNode{Val: list1.Val, Next: list1.Next}
+			} else {
+				listNewNext1.Val = list1.Val
+				listNewNext1.Next = list1.Next
+				listNewNext1 = listNewNext1.Next
+			}
+		} else if list1 == nil && list2 != nil {
+			if listNewNext1 == nil {
+				listNewNext1 = &ListNode{Val: list2.Val, Next: list2.Next}
+			} else {
+				listNewNext1.Val = list2.Val
+				listNewNext1.Next = list2.Next
+				listNewNext1 = listNewNext1.Next
+			}
+		} else if list1.Val <= list2.Val {
+			listNewNext := *list1.Next
+			list1.Next = &ListNode{
+				Val:  list2.Val,
+				Next: &listNewNext,
+			}
+			if listNew == nil {
+				listNew = &ListNode{Val: list1.Val, Next: list1.Next}
+				listNewNext1 = listNew.Next
+			} else {
+				listNewNext1.Val = list1.Val
+				listNewNext1.Next = list1.Next
+				listNewNext1 = listNewNext1.Next
+			}
+			list1 = list1.Next
+			if list2 != nil {
+				list2 = list2.Next
+			}
+		} else {
+			if listNew == nil {
+				listNew = &ListNode{Val: list2.Val, Next: list2.Next}
+				listNewNext1 = listNew.Next
+			} else {
+				listNewNext1.Val = list2.Val
+				listNewNext1.Next = list2.Next
+				listNewNext1 = listNewNext1.Next
+			}
+			list2 = list2.Next
+		}
+	}
+
+	return listNew
 }

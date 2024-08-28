@@ -52,3 +52,64 @@ func TestLongestCommonPrefix(t *testing.T) {
 		t.Error("Invalid response")
 	}
 }
+
+func TestIsValid(t *testing.T) {
+	if isValid("{") {
+		t.Error("Invalid response")
+	}
+	if !isValid("{[]}") {
+		t.Error("Invalid response")
+	}
+	//if isValid("([)]") {
+	//	t.Error("Invalid response")
+	//}
+	//if !isValid("()[]{}") {
+	//	t.Error("Invalid response")
+	//}
+	//if !isValid("()") {
+	//	t.Error("Invalid response")
+	//}
+	//if isValid("(]") {
+	//	t.Error("Invalid response")
+	//}
+}
+
+func TestMergeTwoLists(t *testing.T) {
+	t.Run("", func(t *testing.T) {
+		list1 := ListNode{
+			Val: 1,
+			Next: &ListNode{
+				Val: 2,
+				Next: &ListNode{
+					Val: 4,
+				},
+			}}
+		list2 := ListNode{
+			Val: 1,
+			Next: &ListNode{
+				Val: 3,
+				Next: &ListNode{
+					Val: 4,
+				},
+			}}
+		mergeTwoLists(&list1, &list2)
+	})
+	t.Run("", func(t *testing.T) {
+		list1 := ListNode{
+			Val: 5,
+		}
+		list2 := ListNode{
+			Val: 1,
+			Next: &ListNode{
+				Val: 2,
+				Next: &ListNode{
+					Val: 4,
+				},
+			}}
+		mergeTwoLists(&list1, &list2)
+	})
+	t.Run("", func(t *testing.T) {
+		mergeTwoLists(nil, nil)
+	})
+
+}
